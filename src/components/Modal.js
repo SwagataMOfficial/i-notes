@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 const Modal = (props) => {
     // TODO: plan is that make a state where the edit button click will update the state and add button value to the state and fetch that button value from there and use it for api call below. Also use another state to track the newly updated note as well as old note.
