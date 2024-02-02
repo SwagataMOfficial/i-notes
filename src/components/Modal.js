@@ -5,7 +5,7 @@ const Modal = (props) => {
 
     const updateNote = async (e) => {
         e.preventDefault();
-        console.log("Updating Note...");
+        document.getElementById('closeBtn').click();
         const response = await fetch('http://127.0.0.1:8000/api/notes/update', {
             method: 'POST',
             headers: {
@@ -40,13 +40,13 @@ const Modal = (props) => {
                                 <label htmlFor="note" className="form-label">Your Note</label>
                                 <textarea className="form-control" name='noteText' id="note" rows="3" required value={props.updateText} onChange={(e) => {
                                     // setnoteText(e.value);
-                                    props.setupdateText(e.value);
+                                    props.setupdateText(e.target.value);
                                 }}></textarea>
                             </div>
                         </form>
                     </div>
                     <div className="modal-footer">
-                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" id='closeBtn'>Close</button>
                         <button type="submit" className="btn btn-primary" form='updateNoteForm'>Update Note</button>
                     </div>
                 </div>

@@ -64,11 +64,17 @@ class NotesController extends Controller {
         if (!is_null($request->authtoken)) {
             if (count($existingNote) != 0) {
                 // TODO: add functionality to update the edited note
-                $notes->authtoken = $request->authtoken;
-                $notes->note = $request->note;
-                $notes->save();
-                $result['success'] = true;
-                $result['successMessage'] = "Note Edited Successfully";
+                if(!is_null($request->note)){
+                    $notes->authtoken = $request->authtoken;
+                    $notes->note = $request->note;
+                    $notes->save();
+                    $result['success'] = true;
+                    $result['successMessage'] = "Note Edited Successfully";
+                }
+                else{
+                    $result["success"] = false;
+                    $result["errorMessage"] = "Note Cannot be Empty";
+                }
             }
             else {
                 $result["success"] = false;
