@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import AllContexts from '../context/AllContexts';
 
-export default function NoteInput(props) {
+export default function NoteInput() {
     const navigate = useNavigate();
+    const { showAlert, setprogress, getNotes } = useContext(AllContexts);
 
     const [note, setnote] = useState("");
     const [noteBtn, setnoteBtn] = useState("Add Note");
@@ -14,7 +16,7 @@ export default function NoteInput(props) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setnoteBtn("Adding Note...");
-        props.setprogress(30);
+        setprogress(30);
         const response = await fetch('http://127.0.0.1:8000/api/notes/create', {
             method: 'POST',
             headers: {
@@ -24,18 +26,18 @@ export default function NoteInput(props) {
         });
         const json = await response.json();
         console.log(json);
-        props.setprogress(70);
+        setprogress(70);
         if (json.success) {
             setnoteBtn("Add Note");
             setnote("");
-            props.showAlert('success', json.successMessage, 'Success');
+            showAlert('success', json.successMessage, 'Success');
             navigate('/');
         } else {
             setnoteBtn("Add Note");
-            props.showAlert('danger', json.errorMessage, 'Error');
+            showAlert('danger', json.errorMessage, 'Error');
         }
-        props.setprogress(100);
-        props.getNotes();
+        setprogress(100);
+        getNotes();
     };
 
     return (

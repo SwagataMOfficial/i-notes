@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import AllContexts from '../context/AllContexts';
 
 export default function NoteItem(props) {
+    const { showAlert, setprogress,getNotes, setupdateText, setupdateNoteID } = useContext(AllContexts);
+
     const handleDelete = async (e) => {
-        props.setprogress(30);
+        setprogress(30);
         const response = await fetch(`http://127.0.0.1:8000/api/notes/delete`, {
             method: 'POST',
             headers: {
@@ -11,14 +14,14 @@ export default function NoteItem(props) {
             body: JSON.stringify({ authtoken: localStorage.getItem('authToken'), noteId: e.target.value })
         });
         const json = await response.json();
-        props.setprogress(60);
+        setprogress(60);
         if (json.success) {
-            props.showAlert("success", json.successMessage, "Success");
+            showAlert("success", json.successMessage, "Success");
         } else {
-            props.showAlert("danger", json.errorMessage, "Error");
+            showAlert("danger", json.errorMessage, "Error");
         }
-        props.setprogress(100);
-        props.getNotes();
+        setprogress(100);
+        getNotes();
     };
     return (
         <tr>
@@ -26,8 +29,8 @@ export default function NoteItem(props) {
             <td>{props.note}</td>
             <td style={{ "width": "20%" }}>
                 <button type="button" className="btn btn-primary mx-1" data-bs-toggle="modal" data-bs-target="#updateNoteModal" value={props.noteID} onClick={(e) => {
-                    props.setupdateNoteID(e.target.value);
-                    props.setupdateText(e.target.parentNode.parentNode.children[1].innerText);
+                    setupdateNoteID(e.target.value);
+                    setupdateText(e.target.parentNode.parentNode.children[1].innerText);
                 }}>
                     Edit
                 </button>

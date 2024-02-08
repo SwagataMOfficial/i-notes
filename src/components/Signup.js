@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import AllContexts from '../context/AllContexts';
 
-export default function Signup(props) {
+export default function Signup() {
     const navigate = useNavigate();
+    const { showAlert, setprogress } = useContext(AllContexts);
 
     const [signup, setsignup] = useState({ email: "", password: "", cpassword: "" });
     const [buttonText, setbuttonText] = useState("Sign Up");
@@ -41,17 +43,17 @@ export default function Signup(props) {
 
     const handleSignup = async (e) => {
         e.preventDefault();
-        props.setprogress(20);
+        setprogress(20);
         setbuttonText("Validating...");
         const result = validate();
-        props.setprogress(40);
+        setprogress(40);
         if (!result.status) {
             resetButtonText();
-            props.showAlert(result.color, result.message, result.type);
+            showAlert(result.color, result.message, result.type);
             return;
         }
         setbuttonText("Signing Up...");
-        props.setprogress(70);
+        setprogress(70);
         const response = await fetch('http://127.0.0.1:8000/api/user/signup', {
             method: 'POST',
             headers: {
@@ -60,20 +62,20 @@ export default function Signup(props) {
             body: JSON.stringify({ email: signup.email, password: signup.password, cpassword: signup.cpassword })
         });
         const json = await response.json();
-        props.setprogress(90);
+        setprogress(90);
         console.log(json);
         if (json.success) {
             localStorage.setItem('authToken', json.authToken);
             resetButtonText();
             setsignup({ email: "", password: "", cpassword: "" });
-            props.showAlert('success', json.successMessage, 'Success');
+            showAlert('success', json.successMessage, 'Success');
             navigate('/');
         }
         else {
             resetButtonText();
-            props.showAlert('danger', json.errorMessage, 'Error');
+            showAlert('danger', json.errorMessage, 'Error');
         }
-        props.setprogress(100);
+        setprogress(100);
     };
 
     const handleOnChange = (e) => {

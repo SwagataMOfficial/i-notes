@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import AllContexts from '../context/AllContexts';
 
-const Modal = (props) => {
-    // TODO: plan is that make a state where the edit button click will update the state and add button value to the state and fetch that button value from there and use it for api call below. Also use another state to track the newly updated note as well as old note.
+const Modal = () => {
+    const { showAlert, setprogress,getNotes, updateNoteID, updateText, setupdateText } = useContext(AllContexts);
 
     const updateNote = async (e) => {
         e.preventDefault();
@@ -11,18 +12,18 @@ const Modal = (props) => {
             headers: {
                 'Content-type': 'application/json',
             },
-            body: JSON.stringify({ authtoken: localStorage.getItem('authToken'), note: props.updateText, noteId: props.updateNoteID })
+            body: JSON.stringify({ authtoken: localStorage.getItem('authToken'), note: updateText, noteId: updateNoteID })
         });
         const json = await response.json();
         console.log(json);
-        props.setprogress(70);
+        setprogress(70);
         if (json.success) {
-            props.showAlert('success', json.successMessage, 'Success');
+            showAlert('success', json.successMessage, 'Success');
         } else {
-            props.showAlert('danger', json.errorMessage, 'Error');
+            showAlert('danger', json.errorMessage, 'Error');
         }
-        props.setprogress(100);
-        props.getNotes();
+        setprogress(100);
+        getNotes();
     };
 
     return (
@@ -36,11 +37,10 @@ const Modal = (props) => {
                     <div className="modal-body">
                         <form action='http://127.0.0.1:8000/api/notes/update' method='POST' onSubmit={updateNote} id='updateNoteForm'>
                             <div className="mb-3">
-                                <input type='hidden' name='noteID' value={props.updateNoteID} />
+                                <input type='hidden' name='noteID' value={updateNoteID} />
                                 <label htmlFor="note" className="form-label">Your Note</label>
-                                <textarea className="form-control" name='noteText' id="note" rows="3" required value={props.updateText} onChange={(e) => {
-                                    // setnoteText(e.value);
-                                    props.setupdateText(e.target.value);
+                                <textarea className="form-control" name='noteText' id="note" rows="3" required value={updateText} onChange={(e) => {
+                                    setupdateText(e.target.value);
                                 }}></textarea>
                             </div>
                         </form>

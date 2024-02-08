@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import AllContexts from '../context/AllContexts';
 
-export default function Login(props) {
+export default function Login() {
     const navigate = useNavigate();
+    const { showAlert, setprogress } = useContext(AllContexts);
 
     const [login, setlogin] = useState({ email: "", password: "" });
     const [loginText, setloginText] = useState("Login");
@@ -41,15 +43,15 @@ export default function Login(props) {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        props.setprogress(20);
+        setprogress(20);
         setloginText("Validating....");
         const result = validate();
         if (!result.success) {
             resetButtonText();
-            props.showAlert(result.color, result.message, result.type);
+            showAlert(result.color, result.message, result.type);
             return;
         }
-        props.setprogress(40);
+        setprogress(40);
         const response = await fetch('http://127.0.0.1:8000/api/user/login', {
             method: 'POST',
             headers: {
@@ -59,19 +61,19 @@ export default function Login(props) {
         });
         const json = await response.json();
         console.log(json);
-        props.setprogress(70);
+        setprogress(70);
         if (json.success) {
             resetButtonText();
             setlogin({ email: "", password: "" });
             localStorage.setItem('authToken', json.authToken);
-            props.showAlert('success', json.successMessage, 'Success');
+            showAlert('success', json.successMessage, 'Success');
             navigate('/');
         }
         else {
             resetButtonText();
-            props.showAlert('danger', json.errorMessage, 'Error');
+            showAlert('danger', json.errorMessage, 'Error');
         }
-        props.setprogress(100);
+        setprogress(100);
     };
 
     const handleOnChange = (e) => {

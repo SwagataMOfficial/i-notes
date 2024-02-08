@@ -1,34 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import NoteInput from './NoteInput';
 import Spinner from './Spinner';
 import Notes from './Notes';
 import { useNavigate } from 'react-router-dom';
+import AllContexts from '../context/AllContexts';
 
 export default function Home(props) {
 	const navigate = useNavigate();
-	const [notes, setnotes] = useState([]);
-	const [display, setdisplay] = useState('none');
-	const [loading, setloading] = useState(false);
-
-	const getNotes = async () => {
-		setloading(true);
-		setdisplay("flex");
-		props.setprogress(40);
-		const response = await fetch('http://127.0.0.1:8000/api/notes/get', {
-			method: 'POST',
-			headers: {
-				'Content-type': 'application/json',
-			},
-			body: JSON.stringify({ authtoken: localStorage.getItem('authToken') })
-		});
-		props.setprogress(75);
-		const json = await response.json();
-		// console.log(json);
-		setnotes(json);
-		props.setprogress(100);
-		setdisplay('none');
-		setloading(false);
-	};
+	const { getNotes } = useContext(AllContexts);
 
 	const checkUserValidity = () => {
 		if (localStorage.getItem('authToken')) {
@@ -55,10 +34,10 @@ export default function Home(props) {
 
 	return (
 		<div className='container'>
-			<NoteInput getNotes={getNotes} setprogress={props.setprogress} showAlert={props.showAlert} />
+			<NoteInput />
 			<h3 className='text-center mb-3'>Your Notes</h3>
-			<Spinner display={display} />
-			<Notes notes={notes} loading={loading} showAlert={props.showAlert} setprogress={props.setprogress} getNotes={getNotes} />
+			<Spinner />
+			<Notes />
 		</div>
 	);
 }
