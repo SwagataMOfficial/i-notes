@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import NoteInput from './NoteInput';
 import Spinner from './Spinner';
 import Notes from './Notes';

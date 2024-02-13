@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import NoteItem from './NoteItem';
 import Modal from './Modal';
 import AllContexts from '../context/AllContexts';
