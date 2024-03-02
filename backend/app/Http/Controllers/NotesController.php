@@ -41,9 +41,9 @@ class NotesController extends Controller {
     }
 
     public function deleteNote(Request $request) {
-        $note = Note::where('sl_no', '=', $request->noteId)->Where('authtoken', '=', $request->authtoken)->get();
+        $note = Note::where('sl_no', '=', $request->noteId)->where('authtoken', '=', $request->authtoken)->get();
         if (count($note) != 0) {
-            Note::where('sl_no', '=', $request->noteId)->Where('authtoken', '=', $request->authtoken)->delete();
+            Note::where('sl_no', '=', $request->noteId)->where('authtoken', '=', $request->authtoken)->delete();
             return [
                 "success" => true,
                 "successMessage" => "Note Deleted Successfully"
@@ -63,7 +63,6 @@ class NotesController extends Controller {
         $existingNote = Note::where('sl_no', '=', $request->noteId)->Where('authtoken', '=', $request->authtoken)->get();
         if (!is_null($request->authtoken)) {
             if (count($existingNote) != 0) {
-                // TODO: add functionality to update the edited note
                 if(!is_null($request->note)){
                     $notes->authtoken = $request->authtoken;
                     $notes->note = $request->note;
